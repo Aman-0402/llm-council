@@ -41,8 +41,9 @@ export default function ChatInterface({
     return (
       <div className="chat-interface">
         <div className="empty-state">
-          <h2>Welcome to LLM Council</h2>
-          <p>Create a new conversation to get started</p>
+          <div className="empty-state-icon">⚖️</div>
+          <h2>LLM Council</h2>
+          <p>Create a new chat to consult the council of AI models</p>
         </div>
       </div>
     );
@@ -53,8 +54,9 @@ export default function ChatInterface({
       <div className="messages-container">
         {conversation.messages.length === 0 ? (
           <div className="empty-state">
-            <h2>Start a conversation</h2>
-            <p>Ask a question to consult the LLM Council</p>
+            <div className="empty-state-icon">⚖️</div>
+            <h2>Ask the Council</h2>
+            <p>Your question goes to multiple AI models, then they rank each other, and a chairman synthesizes the final answer</p>
           </div>
         ) : (
           conversation.messages.map((msg, index) => (
@@ -120,16 +122,16 @@ export default function ChatInterface({
         <div ref={messagesEndRef} />
       </div>
 
-      {conversation.messages.length === 0 && (
+      <div className="input-area">
         <form className="input-form" onSubmit={handleSubmit}>
           <textarea
             className="message-input"
-            placeholder="Ask your question... (Shift+Enter for new line, Enter to send)"
+            placeholder="Ask the council... (Shift+Enter for new line)"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isLoading}
-            rows={3}
+            rows={2}
           />
           <button
             type="submit"
@@ -139,7 +141,8 @@ export default function ChatInterface({
             Send
           </button>
         </form>
-      )}
+        <div className="input-hint">Enter to send · Shift+Enter for new line</div>
+      </div>
     </div>
   );
 }

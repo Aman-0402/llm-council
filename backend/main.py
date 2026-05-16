@@ -79,6 +79,30 @@ async def get_conversation(conversation_id: str):
     return conversation
 
 
+@app.delete("/api/conversations/{conversation_id}")
+async def delete_conversation(conversation_id: str):
+    """Delete a conversation."""
+    deleted = storage.delete_conversation(conversation_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    return {"status": "deleted"}
+
+
+class RenameConversationRequest(BaseModel):
+    """Request to rename a conversation."""
+    title: str
+
+
+@app.patch("/api/conversations/{conversation_id}")
+async def rename_conversation(conversation_id: str, request: RenameConversationRequest):
+    """Rename a conversation."""
+    conversation = storage.get_conversation(conversation_id)
+    if conversation is None:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    storage.update_conversation_title(conversation_id, request.title.strip() or "New Conversation")
+    return {"status": "updated"}
+
+
 @app.post("/api/conversations/{conversation_id}/message")
 async def send_message(conversation_id: str, request: SendMessageRequest):
     """
