@@ -48,6 +48,13 @@ async def query_model(
                 'reasoning_details': message.get('reasoning_details')
             }
 
+    except httpx.HTTPStatusError as e:
+        try:
+            detail = e.response.json()
+            print(f"Error querying model {model}: HTTP {e.response.status_code} — {detail}")
+        except Exception:
+            print(f"Error querying model {model}: HTTP {e.response.status_code}")
+        return None
     except Exception as e:
         print(f"Error querying model {model}: {e}")
         return None
