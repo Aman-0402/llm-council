@@ -2,48 +2,57 @@
 
 ![llmcouncil](header.jpg)
 
-The idea of this repo is that instead of asking a question to your favorite LLM provider (e.g. OpenAI GPT 5.1, Google Gemini 3.0 Pro, Anthropic Claude Sonnet 4.5, xAI Grok 4), you can group them into your "LLM Council".
+Instead of asking one LLM, group them into a **Council**. Multiple models answer your question independently, critique each other anonymously, then a chairman synthesizes the final answer.
 
-This is a fully local, lightweight web app. The code has to be minimal, readable, simple and not bloated with complexity. The idea is that the user runs the web app locally, and access it via a localhost url/port.
+Fully local, lightweight web app. Minimal, readable code. Runs on localhost.
 
-UIUX wise, the app looks like ChatGPT. Meaning there is a sidebar on the left storing conversations. User can create a new conversation or access past conversations. The conversations persist.
+## How It Works
 
-The life of a single conversation looks as follows. The user writes up a query. Then:
+Each query goes through 3 stages:
 
-1. Stage 1: first opinions. The user query is given to all LLMs individually, and the responses are collected. The individual responses are shown in a "tab view", so that the user can inspect them.
-2. Stage 2: review. Each individual LLM is given the responses of the other LLMs. The LLM identities are anonymized so that the LLM can't play favorites when judging their outputs. The LLM is asked to rank them in accuracy and insight.
-3. Stage 3: final response. The designated Chairman of the LLM Council (the strongest model) takes all of the model's responses and compiles them into a single final answer that is presented to the user.
+1. **Stage 1 — Individual Responses:** All council models answer independently. Tab view lets you inspect each response.
+2. **Stage 2 — Peer Rankings:** Each model evaluates the others' responses. Identities are anonymized (Response A, B, C…) to prevent bias. Each model ranks the rest by accuracy and insight.
+3. **Stage 3 — Final Synthesis:** The Chairman model (strongest) reads all responses + peer rankings and compiles the definitive answer.
 
-Implementation details:
+## Features
 
-- The project uses [uv](https://docs.astral.sh/uv/) for project management.
-- The project uses [OpenRouter](https://openrouter.ai/) to easily call models across all API providers with a single API key. The API key is stored in `.env` file in current repo.
+- Dark mode UI with progressive streaming (each stage appears as it completes)
+- Sidebar with conversation history — create, rename, and delete chats
+- Transparent: inspect raw model outputs, extracted rankings, and aggregate scores
+- Persistent conversations (JSON storage, no database needed)
+- Single OpenRouter API key covers all model providers
 
 ## Setup
 
-### 1. Install Dependencies
+### 1. Get an OpenRouter API Key
 
-**Backend:**
+Sign up at [openrouter.ai](https://openrouter.ai/) and create an API key. Create a `.env` file in the project root:
+
+```
+OPENROUTER_API_KEY=sk-or-v1-...
+```
+
+> **Never commit this file.** It is already in `.gitignore`.
+
+### 2. Install Dependencies
+
+**Backend** (requires Python 3.10+):
+
+With `uv` (recommended):
 ```bash
 uv sync
+```
+
+Or with pip:
+```bash
+pip install fastapi uvicorn python-dotenv httpx pydantic
 ```
 
 **Frontend:**
 ```bash
 cd frontend
 npm install
-cd ..
 ```
-
-### 2. Configure API Key
-
-Create a `.env` file in the project root:
-
-```bash
-OPENROUTER_API_KEY=sk-or-v1-...
-```
-
-Get your API key at [openrouter.ai](https://openrouter.ai/). Make sure to purchase the credits you need, or sign up for automatic top up.
 
 ### 3. Configure Models (Optional)
 
@@ -51,40 +60,51 @@ Edit `backend/config.py` to customize the council:
 
 ```python
 COUNCIL_MODELS = [
-    "openai/gpt-5.1",
-    "google/gemini-3-pro-preview",
-    "anthropic/claude-sonnet-4.5",
-    "x-ai/grok-4",
+    "openai/gpt-4o-mini",
+    "google/gemini-2.5-flash",
+    "anthropic/claude-haiku-4-5",
+    "meta-llama/llama-3.3-70b-instruct",
 ]
 
-CHAIRMAN_MODEL = "google/gemini-3-pro-preview"
+CHAIRMAN_MODEL = "google/gemini-2.5-flash"
 ```
 
-## Running the Application
+Any model available on [OpenRouter](https://openrouter.ai/models) works here.
 
-**Option 1: Use the start script**
+## Running
+
+**Option 1: Start script**
 ```bash
 ./start.sh
 ```
 
-**Option 2: Run manually**
+**Option 2: Manual**
 
-Terminal 1 (Backend):
+Terminal 1 — Backend:
 ```bash
 uv run python -m backend.main
+# or: python -m backend.main
 ```
 
-Terminal 2 (Frontend):
+Terminal 2 — Frontend:
 ```bash
 cd frontend
 npm run dev
 ```
 
-Then open http://localhost:5173 in your browser.
+Open **http://localhost:5173** in your browser.
 
 ## Tech Stack
 
-- **Backend:** FastAPI (Python 3.10+), async httpx, OpenRouter API
-- **Frontend:** React + Vite, react-markdown for rendering
-- **Storage:** JSON files in `data/conversations/`
-- **Package Management:** uv for Python, npm for JavaScript
+| Layer | Technology |
+|-------|-----------|
+| Backend | FastAPI (Python 3.10+), async httpx |
+| Frontend | React 19 + Vite, react-markdown, SweetAlert2 |
+| Models | OpenRouter API (single key, all providers) |
+| Storage | JSON files in `data/conversations/` |
+| Package mgmt | uv (Python), npm (JS) |
+
+## Ports
+
+- Backend: `http://localhost:8001`
+- Frontend: `http://localhost:5173`
