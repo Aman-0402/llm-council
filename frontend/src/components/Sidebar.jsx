@@ -61,7 +61,7 @@ export default function Sidebar({
       <div className="sidebar-header">
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon">⚖️</div>
-          <h1>LLM Council</h1>
+          <h1>Quorum</h1>
         </div>
         <button className="new-conversation-btn" onClick={onNewConversation}>
           + New Chat

@@ -42,7 +42,7 @@ export default function ChatInterface({
       <div className="chat-interface">
         <div className="empty-state">
           <div className="empty-state-icon">⚖️</div>
-          <h2>LLM Council</h2>
+          <h2>Quorum</h2>
           <p>Create a new chat to consult the council of AI models</p>
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function ChatInterface({
         {conversation.messages.length === 0 ? (
           <div className="empty-state">
             <div className="empty-state-icon">⚖️</div>
-            <h2>Ask the Council</h2>
+            <h2>Ask Quorum</h2>
             <p>Your question goes to multiple AI models, then they rank each other, and a chairman synthesizes the final answer</p>
           </div>
         ) : (

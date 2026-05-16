@@ -1,8 +1,8 @@
-# LLM Council
+# Quorum
 
-![llmcouncil](header.jpg)
+![quorum](header.jpg)
 
-Instead of asking one LLM, group them into a **Council**. Multiple models answer your question independently, critique each other anonymously, then a chairman synthesizes the final answer.
+Instead of asking one LLM, convene a **Quorum**. Multiple models answer your question independently, critique each other anonymously, then a chairman synthesizes the final answer.
 
 Fully local, lightweight web app. Minimal, readable code. Runs on localhost.
 

@@ -1,7 +1,7 @@
 [project]
-name = "llm-council"
+name = "quorum"
 version = "0.1.0"
-description = "Your LLM Council"
+description = "AI consensus engine — multiple models deliberate, peer rank, chairman synthesizes"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
